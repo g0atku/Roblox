@@ -395,36 +395,27 @@ function Library:GiveSignal(Signal)
     table.insert(Library.Signals, Signal)
 end
 
-function Library:Unload()
-    getgenv().VevoExecuted = false
+function Library:Unload()   
+    for _, option in next, SaveManager.Default.objects do
+        if SaveManager.Parser[option.type] then
+            task.spawn(function() SaveManager.Parser[option.type].Load(option.idx, option) end) -- task.spawn() so the config loading wont get stuck.
+        end
+    end
     -- Unload all of the signals
     for Idx = #Library.Signals, 1, -1 do
         local Connection = table.remove(Library.Signals, Idx)
         Connection:Disconnect()
     end
-	for idx, toggle in next, Toggles do
-		Library:SafeCallback(toggle.Callback, toggle.Default)
-		Library:SafeCallback(toggle.Changed, toggle.Default)
-	end
-	for idx, option in next, Options do
-		if option.Type ~= 'KeyPicker' then
-			if option.Type == 'Dropdown' then
-				Library:SafeCallback(option.Callback, option.Default)
-				Library:SafeCallback(option.Changed, option.Default)
-				Library:SafeCallback(option.Callback, option.Default1)
-				Library:SafeCallback(option.Changed, option.Default1)
-            else
-                Library:SafeCallback(option.Callback, option.Default)
-				Library:SafeCallback(option.Changed, option.Default)
-			end
-		end
-	end
-     -- Call our unload callback, maybe to undo some hooks etc
+    -- Call our unload callback, maybe to undo some hooks etc
     if Library.OnUnload then
         Library.OnUnload()
     end
-
     ScreenGui:Destroy()
+    getgenv().Toggles = nil
+    getgenv().Options = nil
+    getgenv().Library = nil
+    getgenv().ThemeManager = nil
+    getgenv().SaveManager = nil
 end
 
 function Library:OnUnload(Callback)
