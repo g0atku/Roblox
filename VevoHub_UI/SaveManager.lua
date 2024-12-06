@@ -4,6 +4,9 @@ if not VevoVersion then getgenv().VevoVersion = loadstring(game:HttpGet('https:/
 local SaveManager = {} do
 	SaveManager.Folder = 'VevoHub '..VevoVersion
 	SaveManager.Ignore = {}
+	SaveManager.Default = {
+		objects = {}
+	}
 	SaveManager.Parser = {
 		Toggle = {
 			Save = function(idx, object) 
@@ -132,6 +135,18 @@ local SaveManager = {} do
 		return true
 	end
 
+	function SaveManager:SaveDefaultConfig()
+		for idx, toggle in next, Toggles do
+			if self.Ignore[idx] then continue end
+			table.insert(self.Default.objects, self.Parser[toggle.Type].Save(idx, toggle))
+		end
+		for idx, option in next, Options do
+			if not self.Parser[option.Type] then continue end
+			if self.Ignore[idx] then continue end
+			table.insert(self.Default.objects, self.Parser[option.Type].Save(idx, option))
+		end
+	end
+
 	function SaveManager:IgnoreThemeSettings()
 		self:SetIgnoreIndexes({ 
 			"BackgroundColor", "MainColor", "AccentColor", "OutlineColor", "FontColor", -- themes
@@ -209,6 +224,14 @@ local SaveManager = {} do
 
 		section:AddDivider()
 
+
+		section:AddButton('Default', function()
+			for _, option in next, SaveManager.Default.objects do
+				if SaveManager.Parser[option.type] then
+					task.spawn(function() SaveManager.Parser[option.type].Load(option.idx, option) end) -- task.spawn() so the config loading wont get stuck.
+				end
+			end
+		end)
 		section:AddButton('Create config', function()
 			local name = Options.SaveManager_ConfigName.Value
 
