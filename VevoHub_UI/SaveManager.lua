@@ -225,13 +225,6 @@ local SaveManager = {} do
 		section:AddDivider()
 
 
-		section:AddButton('Default', function()
-			for _, option in next, SaveManager.Default.objects do
-				if SaveManager.Parser[option.type] then
-					task.spawn(function() SaveManager.Parser[option.type].Load(option.idx, option) end) -- task.spawn() so the config loading wont get stuck.
-				end
-			end
-		end)
 		section:AddButton('Create config', function()
 			local name = Options.SaveManager_ConfigName.Value
 
@@ -268,6 +261,14 @@ local SaveManager = {} do
 			end
 
 			self.Library:Notify(string.format('Overwrote config %q', name))
+		end)
+
+		section:AddButton('Default', function()
+			for _, option in next, SaveManager.Default.objects do
+				if SaveManager.Parser[option.type] then
+					task.spawn(function() SaveManager.Parser[option.type].Load(option.idx, option) end) -- task.spawn() so the config loading wont get stuck.
+				end
+			end
 		end)
 
 		section:AddButton('Refresh list', function()
