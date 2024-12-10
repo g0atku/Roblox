@@ -93,18 +93,18 @@ local SaveManager = {} do
 			objects = {}
 		}
 
-		for idx, toggle in next, Toggles do
-			if self.Ignore[idx] then continue end
-
-			table.insert(data.objects, self.Parser[toggle.Type].Save(idx, toggle))
-		end
-
 		for idx, option in next, Options do
 			if not self.Parser[option.Type] then continue end
 			if self.Ignore[idx] then continue end
 
 			table.insert(data.objects, self.Parser[option.Type].Save(idx, option))
-		end	
+		end
+
+		for idx, toggle in next, Toggles do
+			if self.Ignore[idx] then continue end
+
+			table.insert(data.objects, self.Parser[toggle.Type].Save(idx, toggle))
+		end
 
 		local success, encoded = pcall(httpService.JSONEncode, httpService, data)
 		if not success then
@@ -281,6 +281,13 @@ local SaveManager = {} do
 			writefile(self.Folder .. '/settings/autoload.txt', name)
 			SaveManager.AutoloadLabel:SetText('Current autoload config: ' .. name)
 			self.Library:Notify(string.format('Set %q to auto load', name))
+		end)
+
+		section:AddButton('Reset autoload', function()
+			if isfile(self.Folder .. '/settings/autoload.txt') then
+				delfile(self.Folder .. '/settings/autoload.txt')
+			end
+			SaveManager.AutoloadLabel:SetText('Current autoload config: none')
 		end)
 
 		SaveManager.AutoloadLabel = section:AddLabel('Current autoload config: none', true)
