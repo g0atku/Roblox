@@ -1,8 +1,16 @@
 local httpService = game:GetService('HttpService')
-if not VevoVersion then getgenv().VevoVersion = loadstring(game:HttpGet('https://raw.githubusercontent.com/g0atku/Roblox/main/VevoHub_UI/Version.lua'))() end
+
+function GetVevoFolder()
+    for i, file in pairs(listfiles('')) do
+        if string.find(file, 'VevoHub') and isfolder(file) then
+            return file
+        end
+    end
+    return
+end
 
 local ThemeManager = {} do
-	ThemeManager.Folder = 'VevoHub '..VevoVersion
+	ThemeManager.Folder = GetVevoFolder() or 'LinoriaLibSettings'
 	-- if not isfolder(ThemeManager.Folder) then makefolder(ThemeManager.Folder) end
 
 	ThemeManager.Library = nil
@@ -99,6 +107,15 @@ local ThemeManager = {} do
 			self.Library:Notify(string.format('Set default theme to %q', Options.ThemeManager_ThemeList.Value))
 		end)
 
+		groupbox:AddButton('Reset default', function()
+			if isfile(self.Folder .. '/themes/default.txt') then
+				delfile(self.Folder .. '/themes/default.txt')
+			end
+			self.Library:Notify('Reseted default theme')
+			Options.ThemeManager_CustomThemeList:SetValues(self:ReloadCustomThemes())
+			Options.ThemeManager_CustomThemeList:SetValue(nil)
+		end)
+
 		Options.ThemeManager_ThemeList:OnChanged(function()
 			self:ApplyTheme(Options.ThemeManager_ThemeList.Value)
 		end)
@@ -117,6 +134,26 @@ local ThemeManager = {} do
 			self:ApplyTheme(Options.ThemeManager_CustomThemeList.Value) 
 		end)
 
+		groupbox:AddButton('Delete theme', function()
+			local name = Options.ThemeManager_CustomThemeName.Value
+
+			if not name then
+				return self.Library:Notify('no theme file is selected')
+			end
+
+			local thm = self.Folder .. '/themes/' .. name .. '.json'
+
+			local success, err = delfile(thm)
+			if not success then
+				return self.Library:Notify('Failed to delete theme: ' .. err)
+			end
+
+			self.Library:Notify(string.format('Deleted theme %q', name))
+
+			Options.ThemeManager_CustomThemeList:SetValues(self:ReloadCustomThemes())
+			Options.ThemeManager_CustomThemeList:SetValue(nil)
+		end)
+
 		groupbox:AddButton('Refresh list', function()
 			Options.ThemeManager_CustomThemeList:SetValues(self:ReloadCustomThemes())
 			Options.ThemeManager_CustomThemeList:SetValue(nil)
@@ -127,6 +164,15 @@ local ThemeManager = {} do
 				self:SaveDefault(Options.ThemeManager_CustomThemeList.Value)
 				self.Library:Notify(string.format('Set default theme to %q', Options.ThemeManager_CustomThemeList.Value))
 			end
+		end)
+
+		groupbox:AddButton('Reset default', function()
+			if isfile(self.Folder .. '/themes/default.txt') then
+				delfile(self.Folder .. '/themes/default.txt')
+			end
+			self.Library:Notify('Reseted default theme')
+			Options.ThemeManager_CustomThemeList:SetValues(self:ReloadCustomThemes())
+			Options.ThemeManager_CustomThemeList:SetValue(nil)
 		end)
 
 		ThemeManager:LoadDefault()
