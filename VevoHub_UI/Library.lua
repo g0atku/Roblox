@@ -414,8 +414,8 @@ function Library:Unload()
     getgenv().Toggles = nil
     getgenv().Options = nil
     getgenv().Library = nil
-    getgenv().ThemeManager = nil
     getgenv().SaveManager = nil
+    getgenv().ThemeManager = nil
 end
 
 function Library:OnUnload(Callback)
@@ -2877,7 +2877,7 @@ function Library:SetWatermark(Text)
 end;
 
 function Library:Notify(Text, Time)
-    if getgenv().VevoStealth then return end
+    if VevoStealth then return end
     local XSize, YSize = Library:GetTextBounds(Text, Library.Font, 14);
 
     YSize = YSize + 7
