@@ -1,5 +1,35 @@
 local httpService = game:GetService('HttpService')
 
+local SupportedGames = {
+    ['Striker Odyssey'] = {
+        12467817668, -- Main Lobby
+        12694155368, -- Main Game
+        13864400206, -- Daliy Challenge
+        12868032990, -- Training Room
+        12694156141 -- League Game
+    },
+    ['Locked'] = {
+        12276235857, -- Main Lobby
+        13705109069, -- Autos
+        17079303871, -- Tournament
+        13694660924, -- U-20
+        15732415469, -- Field
+        16364872483 -- Team
+    },
+    ['Spiked'] = {
+        17435076424, -- Main Lobby
+    }
+}
+
+function GetGame()
+    for sgame, id in pairs(SupportedGames) do
+        if table.find(id, game.PlaceId) then
+            return sgame
+        end
+    end
+    return 'Universal | '..(tostring(game.PlaceId))
+end
+
 function GetVevoFolder()
     for i, file in pairs(listfiles('')) do
         if string.find(file, 'VevoHub') and isfolder(file) then
@@ -10,7 +40,7 @@ function GetVevoFolder()
 end
 
 local SaveManager = {} do
-	SaveManager.Folder = GetVevoFolder() or 'LinoriaLibSettings'
+	SaveManager.Folder = GetVevoFolder()..'/'..GetGame() or 'LinoriaLibSettings'
 	SaveManager.Ignore = {}
 	SaveManager.Default = {
 		objects = {}
