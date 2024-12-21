@@ -1,8 +1,16 @@
 local httpService = game:GetService('HttpService')
-if not VevoVersion then getgenv().VevoVersion = loadstring(game:HttpGet('https://raw.githubusercontent.com/g0atku/Roblox/main/VevoHub_UI/Version.lua'))() end
+
+function GetVevoFolder()
+    for i, file in pairs(listfiles('')) do
+        if string.find(file, 'VevoHub') and isfolder(file) then
+            return file
+        end
+    end
+    return
+end
 
 local SaveManager = {} do
-	SaveManager.Folder = 'VevoHub '..VevoVersion
+	SaveManager.Folder = GetVevoFolder() or 'LinoriaLibSettings'
 	SaveManager.Ignore = {}
 	SaveManager.Default = {
 		objects = {}
@@ -250,6 +258,8 @@ local SaveManager = {} do
 			end
 
 			self.Library:Notify(string.format('Loaded config %q', name))
+			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
+			Options.SaveManager_ConfigList:SetValue(nil)
 		end)
 
 		section:AddButton('Overwrite config', function()
@@ -261,6 +271,24 @@ local SaveManager = {} do
 			end
 
 			self.Library:Notify(string.format('Overwrote config %q', name))
+			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
+			Options.SaveManager_ConfigList:SetValue(nil)
+		end)
+
+		section:AddButton('Delete config', function()
+			local name = Options.SaveManager_ConfigList.Value
+			if not name then
+				return self.Library:Notify('no config file is selected')
+			end
+			local cfg = self.Folder .. '/settings/' .. name .. '.json'
+			local success, err = delfile(cfg)
+			if not success then
+				return self.Library:Notify('Failed to delete config: ' .. err)
+			end
+
+			self.Library:Notify(string.format('Deleted config %q', name))
+			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
+			Options.SaveManager_ConfigList:SetValue(nil)
 		end)
 
 		section:AddButton('Default', function()
@@ -269,6 +297,8 @@ local SaveManager = {} do
 					task.spawn(function() SaveManager.Parser[option.type].Load(option.idx, option) end) -- task.spawn() so the config loading wont get stuck.
 				end
 			end
+			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
+			Options.SaveManager_ConfigList:SetValue(nil)
 		end)
 
 		section:AddButton('Refresh list', function()
@@ -281,6 +311,8 @@ local SaveManager = {} do
 			writefile(self.Folder .. '/settings/autoload.txt', name)
 			SaveManager.AutoloadLabel:SetText('Current autoload config: ' .. name)
 			self.Library:Notify(string.format('Set %q to auto load', name))
+			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
+			Options.SaveManager_ConfigList:SetValue(nil)
 		end)
 
 		section:AddButton('Reset autoload', function()
@@ -288,6 +320,8 @@ local SaveManager = {} do
 				delfile(self.Folder .. '/settings/autoload.txt')
 			end
 			SaveManager.AutoloadLabel:SetText('Current autoload config: none')
+			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
+			Options.SaveManager_ConfigList:SetValue(nil)
 		end)
 
 		SaveManager.AutoloadLabel = section:AddLabel('Current autoload config: none', true)
