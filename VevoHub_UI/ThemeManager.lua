@@ -143,7 +143,6 @@ local ThemeManager = {} do
 			end
 			self.Library:Notify('Reseted default theme')
 			Options.ThemeManager_CustomThemeList:SetValues(self:ReloadCustomThemes())
-			Options.ThemeManager_CustomThemeList:SetValue(nil)
 		end)
 
 		Options.ThemeManager_ThemeList:OnChanged(function()
@@ -159,7 +158,6 @@ local ThemeManager = {} do
 			self:SaveCustomTheme(Options.ThemeManager_CustomThemeName.Value)
 
 			Options.ThemeManager_CustomThemeList:SetValues(self:ReloadCustomThemes())
-			Options.ThemeManager_CustomThemeList:SetValue(nil)
 		end):AddButton('Load theme', function() 
 			self:ApplyTheme(Options.ThemeManager_CustomThemeList.Value) 
 		end)
@@ -181,7 +179,6 @@ local ThemeManager = {} do
 			self.Library:Notify(string.format('Deleted theme %q', name))
 
 			Options.ThemeManager_CustomThemeList:SetValues(self:ReloadCustomThemes())
-			Options.ThemeManager_CustomThemeList:SetValue(nil)
 		end)
 
 		groupbox:AddButton('Refresh list', function()
@@ -202,7 +199,6 @@ local ThemeManager = {} do
 			end
 			self.Library:Notify('Reseted default theme')
 			Options.ThemeManager_CustomThemeList:SetValues(self:ReloadCustomThemes())
-			Options.ThemeManager_CustomThemeList:SetValue(nil)
 		end)
 
 		ThemeManager:LoadDefault()
