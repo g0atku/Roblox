@@ -278,7 +278,6 @@ local SaveManager = {} do
 			self.Library:Notify(string.format('Created config %q', name))
 
 			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
-			Options.SaveManager_ConfigList:SetValue(nil)
 		end):AddButton('Load config', function()
 			local name = Options.SaveManager_ConfigList.Value
 
@@ -289,7 +288,6 @@ local SaveManager = {} do
 
 			self.Library:Notify(string.format('Loaded config %q', name))
 			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
-			Options.SaveManager_ConfigList:SetValue(nil)
 		end)
 
 		section:AddButton('Overwrite config', function()
@@ -302,7 +300,6 @@ local SaveManager = {} do
 
 			self.Library:Notify(string.format('Overwrote config %q', name))
 			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
-			Options.SaveManager_ConfigList:SetValue(nil)
 		end)
 
 		section:AddButton('Delete config', function()
@@ -318,7 +315,6 @@ local SaveManager = {} do
 
 			self.Library:Notify(string.format('Deleted config %q', name))
 			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
-			Options.SaveManager_ConfigList:SetValue(nil)
 		end)
 
 		section:AddButton('Default', function()
@@ -328,7 +324,6 @@ local SaveManager = {} do
 				end
 			end
 			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
-			Options.SaveManager_ConfigList:SetValue(nil)
 		end)
 
 		section:AddButton('Refresh list', function()
@@ -342,7 +337,6 @@ local SaveManager = {} do
 			SaveManager.AutoloadLabel:SetText('Current autoload config: ' .. name)
 			self.Library:Notify(string.format('Set %q to auto load', name))
 			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
-			Options.SaveManager_ConfigList:SetValue(nil)
 		end)
 
 		section:AddButton('Reset autoload', function()
@@ -351,7 +345,6 @@ local SaveManager = {} do
 			end
 			SaveManager.AutoloadLabel:SetText('Current autoload config: none')
 			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
-			Options.SaveManager_ConfigList:SetValue(nil)
 		end)
 
 		SaveManager.AutoloadLabel = section:AddLabel('Current autoload config: none', true)
