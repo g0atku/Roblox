@@ -8,8 +8,10 @@ local SupportedGames = {
         12868032990, -- Training Room
         12694156141 -- League Game
     },
+    ['Locked Lobby'] = {
+        12276235857 -- Main Lobby
+    },
     ['Locked'] = {
-        12276235857, -- Main Lobby
         13705109069, -- Autos
         17079303871, -- Tournament
         13694660924, -- U-20
@@ -27,13 +29,17 @@ function GetGame()
             return sgame
         end
     end
-    return 'Universal | '..(tostring(game.PlaceId))
+    return 'Universal'
 end
 
 function GetVevoFolder()
-    for i, file in pairs(listfiles('')) do
-        if string.find(file, 'VevoHub') and isfolder(file) then
-            return file
+    for i,v in pairs(listfiles('')) do
+        if string.find(v, './') then
+		 	if string.find(string.sub(v, 3), 'VevoHub') and isfolder(string.sub(v, 3)) then
+            	return string.sub(v, 3)
+			end
+		elseif string.find(v, 'VevoHub') and isfolder(v) then
+			return v
         end
     end
     return
@@ -308,7 +314,7 @@ local SaveManager = {} do
 				return self.Library:Notify('no config file is selected')
 			end
 			local cfg = self.Folder .. '/settings/' .. name .. '.json'
-			local success, err = delfile(cfg)
+			local success, err = pcall(function() delfile(cfg) end)
 			if not success then
 				return self.Library:Notify('Failed to delete config: ' .. err)
 			end
