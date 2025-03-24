@@ -1,6 +1,7 @@
+local cloneref = cloneref or (function() end);
 local InputService = game:GetService('UserInputService');
 local TextService = game:GetService('TextService');
-local CoreGui = game:GetService('CoreGui');
+local CoreGui = cloneref(game:GetService('CoreGui'));
 local Teams = game:GetService('Teams');
 local Players = game:GetService('Players');
 local RunService = game:GetService('RunService')
@@ -26,12 +27,13 @@ function IsTyping()
 end
 
 local ProtectGui = protectgui or (syn and syn.protect_gui) or (function() end);
+local gethui = (gethui and gethui()) or CoreGui;
 
 local ScreenGui = Instance.new('ScreenGui');
 ProtectGui(ScreenGui);
 
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
-ScreenGui.Parent = CoreGui;
+ScreenGui.Parent = gethui;
 
 local Toggles = {};
 local Options = {};
@@ -3557,7 +3559,7 @@ function Library:CreateWindow(...)
             -- A bit scuffed, but if we're going from not toggled -> toggled we want to show the frame immediately so that the fade is visible.
             Outer.Visible = true;
 
-            if Drawing then
+            --[[if Drawing then
                 task.spawn(function()
                     -- TODO: add cursor fade?
                     local State = InputService.MouseIconEnabled;
@@ -3596,7 +3598,7 @@ function Library:CreateWindow(...)
                     Cursor:Remove();
                     CursorOutline:Remove();
                 end);
-            end;
+            end;]]
         end;
 
         for _, Desc in next, Outer:GetDescendants() do
