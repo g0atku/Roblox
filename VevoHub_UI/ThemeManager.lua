@@ -34,13 +34,17 @@ end
 
 function GetVevoFolder()
     for i,v in pairs(listfiles('')) do
-        if string.find(v, './') then
-		 	if string.find(string.sub(v, 3), 'VevoHub') and isfolder(string.sub(v, 3)) then
-            	return string.sub(v, 3)
+        if string.find(v, 'VevoHub') then
+			local n,k = string.find(v, 'VevoHub')
+		 	if string.find(v, '/', n) then
+			 	local ns,ks = string.find(v, '/', n)
+            	if isfolder(string.sub(v, n, ns-1)) then
+                    return string.sub(v, n, ns-1)
+                end
+			elseif isfolder(string.sub(v, n)) then
+				return string.sub(v, n)
 			end
-		elseif string.find(v, 'VevoHub') and isfolder(v) then
-			return v
-        end
+		end
     end
     return
 end
