@@ -466,6 +466,7 @@ function Library:Unload()
     ScreenGui:Destroy()
     getgenv().Toggles = nil
     getgenv().Options = nil
+    getgenv().VevoVersion = '1.40'
     getgenv().Library = nil
     getgenv().SaveManager = nil
     getgenv().ThemeManager = nil
@@ -3723,8 +3724,6 @@ end;
 Players.PlayerAdded:Connect(OnPlayerChange);
 Players.PlayerRemoving:Connect(OnPlayerChange);
 
-getgenv().Library = Library
-
 local SaveManager = {} do
 	SaveManager.Folder = GetVevoFolder()..'/'..GetGame() or 'LinoriaLibSettings'
 	SaveManager.Ignore = {}
@@ -4046,8 +4045,6 @@ local SaveManager = {} do
 	SaveManager:BuildFolderTree()
 end
 
-getgenv().SaveManager = SaveManager
-
 local ThemeManager = {} do
 	ThemeManager.Folder = GetVevoFolder()..'/'..GetGame() or 'LinoriaLibSettings'
 	-- if not isfolder(ThemeManager.Folder) then makefolder(ThemeManager.Folder) end
@@ -4330,6 +4327,9 @@ local ThemeManager = {} do
 	ThemeManager:BuildFolderTree()
 end
 
+getgenv().VevoVersion = '1.40'
+getgenv().Library = Library
+getgenv().SaveManager = SaveManager
 getgenv().ThemeManager = ThemeManager
 
-return '1.40', Library, SaveManager, ThemeManager
+return VevoVersion, Library, SaveManager, ThemeManager
