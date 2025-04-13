@@ -89,9 +89,6 @@ ScreenGui.Parent = gethui;
 local Toggles = {};
 local Options = {};
 
-getgenv().Toggles = Toggles;
-getgenv().Options = Options;
-
 local Library = {
     Registry = {};
     RegistryMap = {};
@@ -466,7 +463,6 @@ function Library:Unload()
     ScreenGui:Destroy()
     getgenv().Toggles = nil
     getgenv().Options = nil
-    getgenv().VevoVersion = '1.40'
     getgenv().Library = nil
     getgenv().SaveManager = nil
     getgenv().ThemeManager = nil
@@ -4327,9 +4323,8 @@ local ThemeManager = {} do
 	ThemeManager:BuildFolderTree()
 end
 
-getgenv().VevoVersion = '1.40'
+getgenv().Toggles = Toggles
+getgenv().Options = Options
 getgenv().Library = Library
 getgenv().SaveManager = SaveManager
 getgenv().ThemeManager = ThemeManager
-
-return VevoVersion, Library, SaveManager, ThemeManager
